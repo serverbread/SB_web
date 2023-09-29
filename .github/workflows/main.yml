@@ -1,0 +1,19 @@
+name: Put It 2 My Server
+on:
+  push:
+    branches:
+      - master
+jobs:
+  upload2Server:
+    name: Upload 2 Server
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: action/checkout@master
+      with:
+        persist-credentials: false
+    - name: Build
+      run: npm install && npm run build
+    - name: Sync2Server
+      run: echo '114514'
+      
