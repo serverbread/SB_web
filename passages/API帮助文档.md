@@ -1,9 +1,11 @@
-这是一个关于SB_web的API使用帮助的文档。
+# 这是一个关于SB_web的API使用帮助的文档。
+-------------------------------------
+如果你要使用本站API，那么下面是api使用说明：
 
-如果你要使用本站APi，那么下面是api使用说明：
-/api开头的路径是用于api的。
-/api/passages是用于查询文章信息的，接受两个参数，get与data。
-/api/passages?get=的值可以为list或latest
-其中参数为list时将尝试获取所有的文章，参数为latest时将尝试获取最新创建的文章，他们都被存放在passages/文件夹
-/api/passages?data的值为/api/passages?get=list中files键对应列表里面的任意一个文件名，比如/api/passages?data=0001.md
-先写到这吧
+**/api** 开头的路径是提供api服务的。
+
+**/api/passages** 是用于查询文章信息的，请求时有且仅有两个参数，method与detail。
+
+当 **method** 参数为 **get** 时，**detail** 参数可以为 **latest** 与 **list** ，其为 **latest** 时将尝试获取最新创建的文章；其为 **list** 时将尝试获取文章列表，他们都被存放在 **passages/** 目录
+
+当 **method** 参数为 **data** 时，**detail** 参数可以为的值为 **/api/passages?method=get&detail=list** 中 **files** 键对应数组里面的任意一个文件名，比如 **/api/passages?data=0001.md**
