@@ -3,8 +3,147 @@
     <head>
         <meta charset="utf-8">
         <title>SB的屑站 | 读文章</title>
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     </head>
     <body>
+        <div>
+            <h1 id="path"></h1>
+            <div id="passage"></div>
+            <script>
+                const href = window.location.href;
+                if (!href.split('/p/')[1]) {
+                    arg = '';
+                } else {
+                    arg = href.split('/p/')[1];
+                }
+                console.log(arg);
+                fetch(`/api/passage?method=data&detail=${arg}`)
+                .then(res => res.json())
+                .then(data => {
+                    addMessage('文章加载成功！')
+                    if (data.error) {
+                        document.write('文章不存在！');
+                    }
+                    document.querySelector('#path').innerText = arg;
+                    document.querySelector('#passage').innerHTML = marked.parse(data.data);
+                })
+            </script>
+            <style>
+                #passage {
+                    border-style: solid;
+                    border-color: black;
+                    margin: 10px;
+                    color: black;
+                    background-color: rgba(255,255,255,0.5);
+                    backdrop-filter: blur(2px);
+                }
+                body {
+                    background-image: url('/file/img/background.png');
+                    background-repeat: no-repeat;
+                    background-position-x: 0px;
+                    background-position-y: 0px;
+                    background-size: cover;
+                }
+            </style>
+        </div>
         
+        <div id="msg-container" onclick="addMessage('点你妈！？')">
+            <style>
+                #msg-container {
+                position: absolute;
+                bottom: 10%;
+                height: auto;
+            }
+            .inf {
+                display: block;
+                background: linear-gradient(to right, rgb(131, 10, 201), rgba(0,0,0,0));
+                z-index: 8;
+                margin-top: 20px;
+                border-style: outset;
+                border-top: 0px;
+                border-left: 0px;
+                border-right: 0px;
+                border-color: cyan;
+                position: relative;
+                width: fit-content;
+                height: 30px;
+                backdrop-filter: blur(2px);
+                opacity: 1;
+            }
+            .inf span {
+                z-index: 9;
+                color: white;
+                float: left;
+                margin-left: 2px;
+                margin-bottom: 2px;
+                padding-left: 2px;
+                padding-right: 10px;
+            }
+            </style>
+            <script>
+                let msgCount = 0;
+                async function addMessage(str) {
+                    const msgBar = document.querySelector('#msg-container');
+                    const inf = document.createElement('div');
+                    inf.className = 'inf'
+                    inf.id = `msg-${++msgCount}`
+                    /* inf.time = 3; */
+                    const infText = document.createElement('span');
+                    infText.innerText = str;
+                    inf.appendChild(infText);
+                    // inf.style.left = '-50%';
+                    msgBar.appendChild(inf);
+    
+                    // console.debug(`元素宽度${Math.round(document.querySelector(`#msg-${msgCount}`).getBoundingClientRect().width)}px`)
+                    inf.style.left = `-${Math.round(document.querySelector(`#msg-${msgCount}`).getBoundingClientRect().width)}px`
+                    let p = Number(inf.style.left.replace('px', ''));
+                    const animate = setInterval(() => {
+                        if (p <= 0) {
+                            // console.debug(`${p}`)
+                            inf.style.left = `${p += 5}px`
+                        } else {
+                            inf.time = 3;
+                            clearInterval(animate)
+                        }
+                    }, 0.01)
+                }
+                setInterval(() => {
+                    try {
+                        const elem = document.getElementById('msg-container');
+                        // 遍历所有子元素
+                        for (let i = 0; i < elem.children.length; i++) {
+                            if (document.getElementById('msg-container').children[i]) {
+                                //console.log(`元素存在:${i}`);
+                                const children = document.getElementById('msg-container').children[i];
+                                // 淡出动画
+                                const animate1 = setInterval(() => {
+                                    //console.log(`计时器：${children.time}`)
+                                    if (children.time-- <= 0) {
+                                        //console.log('计时完成');
+                                        let i = 0
+                                        const animate2 = setInterval(() => {
+                                            if (i > -100) {
+                                                children.style.bottom = `${i -= 10}%`;
+                                            } else {
+                                                children.remove()
+                                                clearInterval(animate1);
+                                                clearInterval(animate2);
+                                            }
+                                        }, 1)
+                                        //children.style.opacity -= 0.1;
+                                    }
+                                }, 1000);
+                                }/*  else {
+                                    console.log(`元素不存在:${i}`);
+                                } */
+                            }
+    
+                        
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }, 1000)
+            </script>
+        </div>
     </body>
 </html>
