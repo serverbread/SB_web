@@ -8,12 +8,23 @@ jobs:
     name: Upload 2 Server
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: action/checkout@master
-      with:
-        persist-credentials: false
+    - name: Download
+      run: git clone https://github.com/serverbread/sb_web.git
+  
+    - name: ShowPWD
+      run: pwd
+
     - name: Build
-      run: npm install && npm run build
-    - name: Sync2Server
-      run: echo '114514'
+      run: cd sb_web && npm install && npm run build
+
+    - name: Deploy
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.MY_SERVER }}
+        ARGS: "-avz --delete"
+        SOURCE: "public/"
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        TARGET: ${{ secrets.TARGET }}
+      run:
+        echo '114514'
       
