@@ -3,7 +3,7 @@
     <head>
         <title>SB的屑站</title>
         <meta content="text/html" charset="utf-8">
-        <style type="text/css">
+        <style>
             body {
                 background-image: url('file/img/background.png');
                 background-repeat: no-repeat;
@@ -85,7 +85,35 @@
         </style>
     </head>
     <body>
-        <div id="head-bar"><p id="hitokoto"></p></div>
+        <div id="head-bar">
+            <script>
+                const elem = document.getElementById("welcome");
+                const hitokoto = document.getElementById("hitokoto");
+                let x = -10;
+                const animate = setInterval(() => {
+                    if (x <= 3){
+                        elem.style.top = x++ + "%";
+                    } else {
+                        // 动画结束后将执行的动作
+                        clearInterval(animate)
+                    }
+                }, 10);
+                // 向一言API发送请求
+                let hitokotoData = fetch("https://v1.hitokoto.cn")
+                .then(res => res.json())
+                .then(data => {
+                    let hitokotoData = data.hitokoto
+                    //打字机动画
+                    for (let i = 0; i < hitokotoData.length; i++) {
+                        setTimeout(() => {
+                            hitokoto.innerText += hitokotoData[i];
+                        }, i * 50);
+                    }
+                    addMessage('一言加载成功！');
+                })
+            </script>
+            <p id="hitokoto"></p>
+        </div>
         <h1 id="welcome" onclick="addMessage('你点你妈呢？')">欢迎来到Server Bread的个人站点</h1>
         <div id="msg-container" onclick="addMessage('点你妈！？')">
             <style>
@@ -191,53 +219,25 @@
             <HR color="rgba(255,255,255,0)">
             <p id="introduce">我为啥要建这个站？很明显的，为了装逼（bushi</p>
             <HR>
-            <h4 class="title">最新文章：</h4>
-            <p id="latest_passage" onclick="addMessage('byd不好好看文章在这里点我是吧')">    </p>
+            <h4 class="title" onclick="addMessage('byd不好好看文章在这里点我是吧')">最新文章：</h4>
+            <p id="latest_passage">    </p>
+            <button onclick="window.location.href = `/p/${fileName}`">点击跳转</button>
         </div>
         <script>
-            var elem = document.getElementById("welcome");
-            var hitokoto = document.getElementById("hitokoto");
-            let x = -10;
-            const animate = setInterval(() => {
-                if (x <= 3){
-                    elem.style.top = x++ + "%";
-                } else {
-                    // 动画结束后将执行的动作
-                    clearInterval(animate)
-                }
-            }, 10);
-            // 以上为答辩一样的动画
-
-            // 以下为一言
-
-            // 向一言API发送请求
-            let hitokotoData = fetch("https://v1.hitokoto.cn")
-                .then(res => res.json())
-                .then(data => {
-                    let hitokotoData = data.hitokoto
-                    //打字机动画
-                    for (let i = 0; i < hitokotoData.length; i++) {
-                        setTimeout(() => {
-                            hitokoto.innerText += hitokotoData[i];
-                        }, i * 50);
-                    }
-                    addMessage('一言加载成功！');
-                })
-
-
-
             // 获取文章
+            let fileName = null;
             fetch("api/passage?method=get&detail=latest")
                 .then(res => res.json())
                 .then(data => {
                     // 错误处理
+
                     if (data.error) {
                         console.error(`从后端获取信息时发生错误！${data.message}`);
                         alert(`从后端获取信息时发生错误！"${data.message}`);
                         addMessage(`从后端获取信息时发生错误！${data.message}`)
                         return;
                     }
-                    let fileName = data.file
+                    fileName = data.file
                     fetch("api/passage?method=data&detail=" + fileName)
                         .then(res => res.json())
                         .then(data => {
@@ -245,7 +245,6 @@
                             let title = p.split("\n")[0];
                             document.querySelector("#list h4").innerText += title;
                             document.querySelector("#list #latest_passage").innerText += (p.slice(0 + title.length, 500 + length) + "...")
-                            console.log(fileName);
                             /*
                             document.querySelector("#list button").onclick = () => {
                                 window.location.href = ("api/passages?data=" + fileName);
