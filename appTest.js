@@ -35,4 +35,12 @@ app.use(require('./routers/user.js'));
 app.use(require('./routers/resource.js'));
 
 httpServer.listen(5500, '0.0.0.0', (logger.warn('服务器已启动')));
+
+process.on('SIGTERM',()=>{
+    // close server
+    httpServer.close(()=>{
+        process.exitCode = 0;
+        logger.error('收到SIGTERM，正在准备关服跑路！');
+    });
+})
 //httpsServer.listen(8443, '0.0.0.0', (logger.warn('服务器已启动')))
