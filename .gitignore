@@ -3,6 +3,7 @@ config/
 
 # 忽略日志文件
 logs/
+file/latest.log
 
 # 忽略构建产物
 dist/
@@ -22,8 +23,10 @@ node_modules/
 yarn.lock
 
 nodemon.json
-file/latest.log
 file/homework_resource/
 file/img/background.png
 file/img/background2.png
 file/img/login-background.png
+
+# 通常来说这个文件不会被修改，因为在本地测试时需要更改他的端口、https等方面内容
+app.js
