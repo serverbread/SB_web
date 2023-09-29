@@ -14,8 +14,8 @@ jobs:
     - name: ShowPWD
       run: pwd
 
-    - name: Build
-      run: npm install && npm run build
+    - name: Npm install
+      run: npm install
 
     - name: Deploy
       env:
