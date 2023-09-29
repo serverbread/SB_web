@@ -8,23 +8,15 @@ jobs:
     name: Idk
     runs-on: ubuntu-latest
     steps:
-    - name: Download
+    - name: Git Clone
+      # 克隆仓库
       run: git clone https://github.com/serverbread/sb_web.git .
-  
-    - name: ShowPWD
-      run: pwd
 
     - name: Npm install
+      # 安装库
       run: npm install
 
-    - name: Deploy
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.MY_SERVER }}
-        ARGS: "-avz --delete"
-        SOURCE: "public/"
-        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-        REMOTE_USER: ${{ secrets.REMOTE_USER }}
-        TARGET: ${{ secrets.TARGET }}
+    - name: Deploy to Server
       run:
-        echo '114514'
+        echo '妈的不搞了，你就当他上传了吧'
       
