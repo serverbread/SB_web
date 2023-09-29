@@ -9,8 +9,10 @@
         <div>
             <h1 id="path"></h1>
             <div id="passage"></div>
+            <button class="chP" id="last"><a>上一篇</a></button>
+            <button class="chP" id="next"><a>下一篇</a></button>
             <script>
-                const href = window.location.href;
+                const href = decodeURIComponent(window.location.href);
                 if (!href.split('/p/')[1]) {
                     arg = '';
                 } else {
@@ -26,6 +28,16 @@
                     }
                     document.querySelector('#path').innerText = arg;
                     document.querySelector('#passage').innerHTML = marked.parse(data.data);
+                })
+                fetch('/api/passage?method=get&detail=list')
+                .then(res => res.json())
+                .then(data => {
+                    data.files.forEach((p, i, array) => {
+                        if (p == arg) {
+                            if (array[i - 1]) document.querySelector('#last a').href = `/p/${array[i - 1]}`
+                            if (array[i + 1]) document.querySelector('#next a').href = `/p/${array[i + 1]}`
+                        }
+                    })
                 })
             </script>
             <style>
@@ -43,6 +55,23 @@
                     background-position-x: 0px;
                     background-position-y: 0px;
                     background-size: cover;
+                }
+                .chP {
+                    background-color: rgba(255,255,255,0.5);
+                    border-color: black;
+                    border-style: solid;
+                    min-height: 45px;
+                    min-width: 80px;
+                    height: auto;
+                    width: auto;
+                    border-radius: 4px;
+                    position: absolute;
+                }
+                #last {
+                    left: 10%;
+                }
+                #next {
+                    right: 20%;
                 }
             </style>
         </div>
