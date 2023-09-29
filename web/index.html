@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SB的屑站</title>
+        <meta content="text/html" charset="utf-8">
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <style type="text/css">
+            body {
+                background-image: url('file/img/background.png');
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: cover;
+            }
+            #welcome {
+                    position: fixed;
+                    margin: -10px;
+                }
+            #welcome a {
+                text-decoration: none;
+                outline: none;
+                color: black;
+                margin: 0;
+            }
+            #list {
+                display: block;
+                margin: 10px 10px;
+                position: fixed;
+                float: left;
+                margin-top: 50px;
+                width: 95%;
+                height: 75%;
+                background: rgba(255, 255, 255, 0.5);
+                border-radius: 25px;
+                box-shadow: 10px 10px 1px 1px rgba(255, 255, 255, 0.3);
+                backdrop-filter: blur(4px);
+            }
+
+            #list .title {
+                display: block;
+                margin-left: 10px;
+                width: 100%;
+                height: 30px;
+                margin-bottom: 0px;
+            }
+            #list p {
+                display: block;
+                color: rgb(73, 40, 40);
+                padding: 0px 12px;
+                margin-left: 10px;
+            }
+            #list #introduce {
+                height: 10%;
+                width: 90%;
+            }
+            #list #latest_passage {
+                margin-top: 0px;
+                height: 55%;
+                width: 90%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            #head-bar {
+                background: rgba(127, 255, 212, 0.5);
+                backdrop-filter: blur(4px);
+                margin: -8px;
+                height: 50px;
+            }
+            #hitokoto {
+                margin-top: 0px;
+                text-align: center;
+                font-style: oblique;
+            }
+            #list button {
+                display: block;
+                margin: 10px;
+                background-color: #4CAF50; /* Green */
+                float: right;
+                border: none;
+                color: white;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+                border-radius: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="head-bar"><p id="hitokoto"></p></div>
+        <h1 id="welcome" onclick="addMessage('你点你妈呢？')">欢迎来到Server Bread的个人站点</h1>
+        <div id="msg-container" onclick="addMessage('唔！？')">
+            <style>
+                #msg-container {
+                position: absolute;
+                bottom: 10%;
+                height: auto;
+            }
+            .inf {
+                display: block;
+                background: linear-gradient(to right, rgb(131, 10, 201), rgba(0,0,0,0));
+                z-index: 8;
+                margin-top: 20px;
+                border-style: outset;
+                border-top: 0px;
+                border-left: 0px;
+                border-right: 0px;
+                border-color: cyan;
+                position: relative;
+                width: fit-content;
+                height: 30px;
+                backdrop-filter: blur(2px);
+                opacity: 1;
+            }
+            .inf span {
+                z-index: 9;
+                color: white;
+                float: left;
+                margin-left: 2px;
+                margin-bottom: 2px;
+                padding-left: 2px;
+                padding-right: 10px;
+            }
+            </style>
+            <script>
+                let msgCount = 0;
+                async function addMessage(str) {
+                    console.log('添加了信息！')
+                    const msgBar = document.querySelector('#msg-container');
+                    const inf = document.createElement('div');
+                    inf.className = 'inf'
+                    inf.id = `msg-${++msgCount}`
+                    /* inf.time = 3; */
+                    const infText = document.createElement('span');
+                    infText.innerText = str;
+                    inf.appendChild(infText);
+                    // inf.style.left = '-50%';
+                    msgBar.appendChild(inf);
+    
+                    // console.debug(`元素宽度${Math.round(document.querySelector(`#msg-${msgCount}`).getBoundingClientRect().width)}px`)
+                    inf.style.left = `-${Math.round(document.querySelector(`#msg-${msgCount}`).getBoundingClientRect().width)}px`
+                    let p = Number(inf.style.left.replace('px', ''));
+                    const animate = setInterval(() => {
+                        if (p <= 0) {
+                            // console.debug(`${p}`)
+                            inf.style.left = `${p += 5}px`
+                        } else {
+                            inf.time = 3;
+                            clearInterval(animate)
+                        }
+                    }, 0.01)
+                }
+                setInterval(() => {
+                    try {
+                        const elem = document.getElementById('msg-container');
+                        // 遍历所有子元素
+                        for (let i = 0; i < elem.children.length; i++) {
+                            if (document.getElementById('msg-container').children[i]) {
+                                //console.log(`元素存在:${i}`);
+                                const children = document.getElementById('msg-container').children[i];
+                                // 淡出动画
+                                const animate1 = setInterval(() => {
+                                    //console.log(`计时器：${children.time}`)
+                                    if (children.time-- <= 0) {
+                                        //console.log('计时完成');
+                                        let i = 0
+                                        const animate2 = setInterval(() => {
+                                            if (i > -100) {
+                                                children.style.bottom = `${i -= 10}%`;
+                                            } else {
+                                                children.remove()
+                                                clearInterval(animate1);
+                                                clearInterval(animate2);
+                                            }
+                                        }, 1)
+                                        //children.style.opacity -= 0.1;
+                                    }
+                                }, 1000);
+                                }/*  else {
+                                    console.log(`元素不存在:${i}`);
+                                } */
+                            }
+    
+                        
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }, 1000)
+            </script>
+        </div>
+        <div id="list">
+            <h3 class="title">来看些什么吧</h3>
+            <HR color="rgba(255,255,255,0)">
+            <p id="introduce">我为啥要建这个站？很明显的，为了装逼（bushi</p>
+            <HR>
+            <h4 class="title">最新文章：</h4>
+            <p id="latest_passage" onclick="addMessage('byd不好好看文章在这里点我是吧')">    </p>
+        </div>
+        <script>
+            var elem = document.getElementById("welcome");
+            var hitokoto = document.getElementById("hitokoto");
+            let x = -10;
+            const animate = setInterval(() => {
+                if (x <= 3){
+                    elem.style.top = x++ + "%";
+                } else {
+                    // 动画结束后将执行的动作
+                    clearInterval(animate)
+                }
+            }, 10);
+            // 以上为答辩一样的动画
+
+            // 以下为一言
+
+            // 向一言API发送请求
+            let hitokotoData = fetch("https://v1.hitokoto.cn")
+                .then(res => res.json())
+                .then(data => {
+                    let hitokotoData = data.hitokoto
+                    //打字机动画
+                    for (let i = 0; i < hitokotoData.length; i++) {
+                        setTimeout(() => {
+                            hitokoto.innerText += hitokotoData[i];
+                        }, i * 50);
+                    }
+                    addMessage('一言加载成功！');
+                })
+
+
+
+            // 获取文章
+            fetch("api/passage?method=get&detail=latest")
+                .then(res => res.json())
+                .then(data => {
+                    // 错误处理
+                    if (data.error) {
+                        console.error(`从后端获取信息时发生错误！${data.message}`);
+                        alert(`从后端获取信息时发生错误！"${data.message}`);
+                        addMessage(`从后端获取信息时发生错误！${data.message}`)
+                        return;
+                    }
+                    let fileName = data.file
+                    fetch("api/passage?method=data&detail=" + fileName)
+                        .then(res => res.json())
+                        .then(data => {
+                            let p = data.data;
+                            let title = p.split("\n")[0];
+                            document.querySelector("#list h4").innerText += title;
+                            document.querySelector("#list #latest_passage").innerText += (p.slice(0 + title.length, 500 + length) + "...")
+                            console.log(fileName);
+                            /*
+                            document.querySelector("#list button").onclick = () => {
+                                window.location.href = ("api/passages?data=" + fileName);
+                            }*/
+                            addMessage('文章加载成功！');
+                            // console.log("文章标题：", title);
+                            // console.log("文章简明信息：", p.slice(0 + title.length, 200 + length) + "...");
+                            });
+                });
+
+
+        </script>
+    </body>
+</html>

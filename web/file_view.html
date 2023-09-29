@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>SB的屑站 | 文件浏览</title>
+    </head>
+    <body>
+        <h1>好好浏♂览一下文件</h1>
+        <h2>绿色的是目录，蓝色的是文件</h2>
+        <div id="list">
+            <ul id="file-list">
+                <li><a class="dir" id="current-dir">.</a></li>
+                <li><a class="dir" id="parent-dir">..</a></li>
+                <hr />
+            </ul>
+            <h2 id="pwd">当前目录：<span></span></h2>
+            <style>
+                #list {
+                    border-style: double;
+                    border-color: black;
+                    background-color: rgba(255,255,255,0.25);
+                    backdrop-filter: blur(2px);
+                }
+                .dir {
+                    color: green;
+                }
+                .file {
+                    color: blue;
+                }
+                #file-list li {
+                    list-style-type: none;
+                }
+                #file-list li span {
+                    position: absolute;
+                    right: 10%;
+                }
+            </style>
+            <script>
+                const href = window.location.href;
+
+                const pwdElem = document.querySelector('#pwd span');
+                const currentDirElem = document.querySelector('#current-dir');
+                const parentDirElem = document.querySelector('#parent-dir');
+
+                if (!href.split('/file/')[1]) {
+                    path = '';
+                } else {
+                    path = href.split('/file/')[1];
+                }
+
+                // pwdElem.href = `/file/${path}`;
+                pwdElem.innerText = `/${path}`;
+                
+                currentDirElem.href = `/file/${path}`;
+
+                let tempPath = ('/file/' + path).split('/');
+                tempPath.length -= 1;  // 通过强制减小数组长度来删除最后一个元素
+                // console.log(tempPath.toString().replace(/,/g, '/'));
+                parentDirElem.href = `${tempPath.toString().replace(/,/g, '/')}`;
+                
+                fetch(`/api/file?path=file/${path}`)
+                    .then(res => {
+                        addMessage(`成功列出/${path}`);
+                        return res.json();
+                    })
+                    .then(data => {
+                        data.forEach((i) => {
+                            const li = document.createElement('li');
+                            const a = document.createElement('a');
+                            const span = document.createElement('span');
+
+                            a.className = i.isFile ? 'file' : 'dir';
+                            const size = Math.round(i.size / 1024 * 100) / 100   //KB
+                            span.innerText = `${size <= 1024 ? `${size}KB` : `${Math.round(size / 1024 * 100) / 100}MB`}`;
+                            // console.log(i);
+                            // console.log(`路径：${i.path}`);
+                            a.href = '/' + i.path.replaceAll('//', '/');
+                            a.innerText = i.name;
+                            li.appendChild(a);
+                            li.appendChild(span);
+                            document.querySelector('#file-list').appendChild(li);
+                        })
+                        // console.log(data);
+                    });
+                    //document.getElementsByClassName('file').onclick = alert('你点击了一个文件！');
+            </script>
+        </div>
+        <div id="msg-container" onclick="addMessage('唔！？')">
+            <style>
+                body {
+                    background-image: url('/file/img/background2.png');
+                    background-repeat: no-repeat;
+                    
+                    background-attachment: scroll;
+                    background-size: cover;
+                }
+                #msg-container {
+                position: absolute;
+                bottom: 10%;
+                height: auto;
+            }
+            .inf {
+                display: block;
+                background: linear-gradient(to right, rgb(131, 10, 201), rgba(0,0,0,0));
+                z-index: 8;
+                margin-top: 20px;
+                border-style: outset;
+                border-top: 0px;
+                border-left: 0px;
+                border-right: 0px;
+                border-color: cyan;
+                position: relative;
+                width: fit-content;
+                height: 30px;
+                backdrop-filter: blur(2px);
+                opacity: 1;
+            }
+            .inf span {
+                z-index: 9;
+                color: black;
+                float: left;
+                margin-left: 2px;
+                margin-bottom: 2px;
+                padding-left: 2px;
+                padding-right: 10px;
+            }
+            </style>
+            <script>
+                let msgCount = 0;
+                async function addMessage(str) {
+                    console.log('添加了信息！')
+                    const msgBar = document.querySelector('#msg-container');
+                    const inf = document.createElement('div');
+                    inf.className = 'inf'
+                    inf.id = `msg-${++msgCount}`
+                    /* inf.time = 3; */
+                    const infText = document.createElement('span');
+                    infText.innerText = str;
+                    inf.appendChild(infText);
+                    // inf.style.left = '-50%';
+                    msgBar.appendChild(inf);
+    
+                    // console.debug(`元素宽度${Math.round(document.querySelector(`#msg-${msgCount}`).getBoundingClientRect().width)}px`)
+                    inf.style.left = `-${Math.round(document.querySelector(`#msg-${msgCount}`).getBoundingClientRect().width)}px`
+                    let p = Number(inf.style.left.replace('px', ''));
+                    const animate = setInterval(() => {
+                        if (p <= 0) {
+                            // console.debug(`${p}`)
+                            inf.style.left = `${p += 5}px`
+                        } else {
+                            inf.time = 3;
+                            clearInterval(animate)
+                        }
+                    }, 0.01)
+                }
+                setInterval(() => {
+                    try {
+                        const elem = document.getElementById('msg-container');
+                        // 遍历所有子元素
+                        for (let i = 0; i < elem.children.length; i++) {
+                            if (document.getElementById('msg-container').children[i]) {
+                                //console.log(`元素存在:${i}`);
+                                const children = document.getElementById('msg-container').children[i];
+                                // 淡出动画
+                                const animate1 = setInterval(() => {
+                                    //console.log(`计时器：${children.time}`)
+                                    if (children.time-- <= 0) {
+                                        //console.log('计时完成');
+                                        let i = 0
+                                        const animate2 = setInterval(() => {
+                                            if (i > -100) {
+                                                children.style.bottom = `${i -= 10}%`;
+                                            } else {
+                                                children.remove()
+                                                clearInterval(animate1);
+                                                clearInterval(animate2);
+                                            }
+                                        }, 1)
+                                        //children.style.opacity -= 0.1;
+                                    }
+                                }, 1000);
+                                }/*  else {
+                                    console.log(`元素不存在:${i}`);
+                                } */
+                            }
+    
+                        
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }, 1000)
+            </script>
+        </div>
+    </body>
+</html>
