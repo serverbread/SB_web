@@ -5,17 +5,17 @@ on:
       - master
 jobs:
   upload2Server:
-    name: Upload 2 Server
+    name: Idk
     runs-on: ubuntu-latest
     steps:
     - name: Download
-      run: git clone https://github.com/serverbread/sb_web.git
+      run: git clone https://github.com/serverbread/sb_web.git .
   
     - name: ShowPWD
       run: pwd
 
     - name: Build
-      run: cd sb_web && npm install && npm run build
+      run: npm install && npm run build
 
     - name: Deploy
       env:
