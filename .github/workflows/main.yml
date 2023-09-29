@@ -17,7 +17,7 @@ jobs:
       run: npm install
       # 测试服务器
     - name: Test
-      run: timeout 3min node appTest.js
+      run: timeout 3m node appTest.js
 
     - name: Deploy to Server
       run:
