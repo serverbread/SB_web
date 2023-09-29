@@ -7,6 +7,7 @@
 const express = require('express');
 const http = require('http');
 const SBLog = require('./SBLog.js');
+const { log } = require('console');
 
 const logger = new SBLog('info')
 
@@ -36,11 +37,15 @@ app.use(require('./routers/resource.js'));
 
 httpServer.listen(5500, '0.0.0.0', (logger.warn('服务器已启动')));
 
+setTimeout(() => {
+    logger.error('测试时间到了，关服跑路');
+    process.exit(0);
+}, 3600);
+
 process.on('SIGTERM',()=>{
     // close server
     httpServer.close(()=>{
         logger.error('收到SIGTERM，正在准备关服跑路！');
-        process.exit(0);
     });
 })
 //httpsServer.listen(8443, '0.0.0.0', (logger.warn('服务器已启动')))
