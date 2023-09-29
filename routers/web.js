@@ -26,4 +26,9 @@ router.get('/', (req, res) => {
     res.end(fs.readFileSync('web/index.html'));
     return;
 })
+router.get('/p*', (req, res) => {
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.end(fs.readFileSync('web/passage_view.html'));
+    return;
+})
 module.exports = router
