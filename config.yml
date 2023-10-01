@@ -7,4 +7,7 @@ server:
     private: '/etc/ssl/certs/dashabi.key'
     public: '/etc/ssl/certs/dashabi.pem'
 database:
-  url: ''
+  sqlite:
+    path: 'data/users.db'
+  redis:
+    url: ''
