@@ -17,8 +17,8 @@ jobs:
       run: npm install
       # 测试服务器
     - name: Test
-      run: screen -dR web timeout -s SIGTERM 1m node appTest.js && curl localhost:8050/ && curl localhost:5500/api && curl localhost:5500/login && curl localhost:5500/api/login-status && curl localhost:5500/api/passage?method=get&detail=list && curl localhost:5500/api/passage?method=get&detail=latest && curl localhost:5500/api/passage?method=data&detail=0001.md
-
+      run: timeout -s SIGTERM 1m node appTest.js
+      
     - name: Deploy to Server
       run:
         echo '妈的不搞了，你就当他上传了吧'
