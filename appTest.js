@@ -7,9 +7,9 @@
 const express = require('express');
 const http = require('http');
 const SBLog = require('./SBLog.js');
-const { log } = require('console');
+//const { log } = require('console');
 
-const logger = new SBLog('info')
+//const logger = new SBLog('info')
 
 /*const cert = {
     key: fs.readFileSync('/etc/ssl/certs/dashabi.key'),
@@ -22,7 +22,7 @@ const httpServer = http.createServer(app);
 
 app.use((req, res, next) => {
     // res.setHeader('Content-Type', 'charset=utf-8')
-    logger.info(`${req.ip} ${req.method} ${req.url}`);   // 打印请求详情
+    console.log(`${req.ip} ${req.method} ${req.url}`);   // 打印请求详情
     //logger.debug(`cookie:${req.cookies}`)
     /*
     if (req.protocol !== 'https') {
@@ -35,17 +35,17 @@ app.use(require('./routers/web.js'));
 app.use(require('./routers/user.js'));
 app.use(require('./routers/resource.js'));
 
-httpServer.listen(5500, '0.0.0.0', (logger.warn('服务器已启动')));
+httpServer.listen(5500, '0.0.0.0', (console.warn('服务器已启动')));
 
 setTimeout(() => {
-    logger.error('测试时间到了，关服跑路');
+    console.error('测试时间到了，关服跑路');
     process.exit(0);
 }, 3600);
 
 process.on('SIGTERM',()=>{
     // close server
     httpServer.close(()=>{
-        logger.error('收到SIGTERM，正在准备关服跑路！');
+        console.error('收到SIGTERM，正在准备关服跑路！');
     });
 })
 //httpsServer.listen(8443, '0.0.0.0', (logger.warn('服务器已启动')))
