@@ -13,8 +13,10 @@ const SBLog = require('./SBLog.js');
 const YAML = require('yaml');
 const jwt = require('jsonwebtoken');
 
-const logger = new SBLog('info')
+const logger = new SBLog('debug')
 const config = YAML.parse(fs.readFileSync('config.yml', 'utf-8'));
+
+logger.debug(JSON.stringify(config));
 
 const cert = {
     key: fs.readFileSync(config.server.cert.private),
@@ -33,14 +35,23 @@ app.use((req, res, next) => {
     // res.setHeader('Content-Type', 'charset=utf-8')
     try{
         jwt.verify(req.cookies['sb_web-token'], config.server.jwtKey, (err, payload) => {
-            logger.info(`\x1b[32m${req.ip}( ${payload.username} ) ${req.method} ${req.url}\x1b[39m`);
+            // logger.info(`\x1b[32m${req.ip}( ${payload.username} ) ${req.method} ${req.url}\x1b[39m`);
+            logger.info(`\x1b[32m( ${payload.username} ) ${req.method} ${req.url}\x1b[39m`);
         })
     } catch (e) {
-        logger.info(`${req.ip} ${req.method} ${req.url}`);
+        // logger.info(`${req.ip} ${req.method} ${req.url}`);
+        logger.info(`${req.method} ${req.url}`);
     }
 
     if (req.protocol !== 'https') {
         return res.redirect('https://' + req.hostname + req.url);
+    }
+    if (req.method === 'POST') {
+        try {
+            logger.debug(JSON.stringify(req.body));
+        } catch (e) {
+            logger.error(e);
+        }
     }
     next();
 });
@@ -50,5 +61,5 @@ app.use(require('./routers/web.js'));
 app.use(require('./routers/user.js'));
 app.use(require('./routers/resource.js'));
 
-httpServer.listen(config.server.httpPort, config.server.host, (logger.warn('服务器已启动')));
-httpsServer.listen(config.server.httpsPort, config.server.host, (logger.warn('服务器已启动')))
+httpServer.listen(config.server.httpPort, config.server.host, (logger.info('http服务器已启动')));
+httpsServer.listen(config.server.httpsPort, config.server.host, (logger.info('https服务器已启动')))

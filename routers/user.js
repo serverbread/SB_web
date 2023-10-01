@@ -70,4 +70,9 @@ router.all('/login', (req, res) => {
     }
 })
 
+router.all('/register', (req, res) => {
+    res.end(fs.readFileSync('web/register.html'));
+    return;
+})
+
 module.exports = router;

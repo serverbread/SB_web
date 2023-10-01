@@ -11,6 +11,7 @@
                     background-image: url('/file/img/login-background.png');
                     background-repeat: no-repeat;
                 }
+                /*
                 #user-info {
                     backdrop-filter: blur(2px);
                     background-color: rgba(255,255,255,0.2);
@@ -47,13 +48,14 @@
                     text-align: center;
                     font-style: oblique;
                 }
+                */
             </style>
             <h4>登录</h4>
             <form>
                 <span>Username</span>
-                <input id="username" type="text" name="user" value="xiaym">
+                <input id="username" type="text" name="user" value="用户名">
                 <span>Password</span>
-                <input id="password" type="password" name="password" value="114514">
+                <input id="password" type="password" name="password" value="密码">
             </form>
         </div>
         <button onclick="sendData(document.getElementById('username').value, document.getElementById('password').value)">提交</button>
@@ -73,7 +75,7 @@
                 addMessage('请求已成功传达给后端');
                 // console.log(data);
                 xhr.onreadystatechange = () => {
-                    addMessage(xhr.response);
+                    addMessage(JSON.parse(xhr.response).message);
                 }
             }
 

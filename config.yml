@@ -2,8 +2,8 @@ server:
   httpPort: 80
   httpsPort: 443
   host: '0.0.0.0'
-  jwtKey: '这里是不会和真实环境一样的XD'
-  jwtKeyTimeout: '10m'
+  jwtKey: 'ca0f180dec4c5243012520f01e4ae93f95d41cfd'
+  jwtKeyTimeout: '240h'
   cert:
     private: '/etc/ssl/certs/dashabi.key'
     public: '/etc/ssl/certs/dashabi.pem'

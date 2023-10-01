@@ -150,7 +150,7 @@ router.get('/api/login-status', (req, res) => {
             data.message = `验证失败，闻起来像${err}`
             return;
         }
-        data.message = `成功登录${JSON.stringify(payload)}`
+        data.message = '成功登录'
         logger.debug(`负载：${JSON.stringify(payload)}`);
     })
     // data.message = `你的token：${req.cookies['sb_web-token']}`
