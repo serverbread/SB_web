@@ -11,6 +11,7 @@ const fs = require('fs');
 const SBLog = require('./SBLog.js');
 //const exp = require('constants');
 const YAML = require('yaml');
+const jwt = require('jsonwebtoken');
 
 const logger = new SBLog('info')
 const config = YAML.parse(fs.readFileSync('config.yml', 'utf-8'));
@@ -24,19 +25,25 @@ const app = express();
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer(cert, app);
 
+app.use(require('body-parser').urlencoded({ extended: false }))
+app.use(express.json())
+app.use(require('cookie-parser')())
+
 app.use((req, res, next) => {
     // res.setHeader('Content-Type', 'charset=utf-8')
-    logger.info(`${req.ip} ${req.method} ${req.url}`);   // 打印请求详情
-    //logger.debug(`cookie:${req.cookies}`)
-    
+    try{
+        jwt.verify(req.cookies['sb_web-token'], config.server.jwtKey, (err, payload) => {
+            logger.info(`\x1b[32m${req.ip}( ${payload.username} ) ${req.method} ${req.url}\x1b[39m`);
+        })
+    } catch (e) {
+        logger.info(`${req.ip} ${req.method} ${req.url}`);
+    }
+
     if (req.protocol !== 'https') {
         return res.redirect('https://' + req.hostname + req.url);
     }
     next();
 });
-app.use(require('body-parser').urlencoded({ extended: false }))
-app.use(express.json())
-app.use(require('cookie-parser')())
 
 app.use(require('./routers/api.js'));
 app.use(require('./routers/web.js'));

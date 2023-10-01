@@ -3,7 +3,7 @@ server:
   httpsPort: 443
   host: '0.0.0.0'
   jwtKey: '这里是不会和真实环境一样的XD'
-  jwtKeyTimeout: '10s'
+  jwtKeyTimeout: '10m'
   cert:
     private: '/etc/ssl/certs/dashabi.key'
     public: '/etc/ssl/certs/dashabi.pem'

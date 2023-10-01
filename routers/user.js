@@ -9,7 +9,7 @@ const YAML = require('yaml');
 const sqlite3 = require('sqlite3');
 
 const config = YAML.parse(fs.readFileSync('config.yml', 'utf-8')); // 配置文件
-const logger = new SBLog('debug');
+const logger = new SBLog('info');
 const db = new sqlite3.Database(config.database.sqlite.path, err => logger.error(err));
 
 // client.on('error', err => logger.error(err))
