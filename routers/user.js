@@ -26,14 +26,13 @@ router.all('/login', (req, res) => {
     } else if (req.method === 'POST') {
         res.setHeader('Content-Type', 'application/json; charset=utf-8');
         
-        const { username, password } = req.body;
+        const { username, password } = req.body;  // 获取post请求的数据
 
         // 使用数据库获取数据
         db.get(`SELECT * FROM USERDATA WHERE id == '${username}'`, (err, row) => {
             // 检测用户名是否正确
             if (!row) {
                 logger.error('查无此人');
-                // logger.debug(`SELECT * FROM USERDATA WHERE id == '${username}'`);
                 data.error = true;
                 data.message = '登录失败！请检查用户名与密码是否正确！'
                 res.end(JSON.stringify(data));
@@ -53,7 +52,7 @@ router.all('/login', (req, res) => {
             jwt.sign(
                 { username },
                 config.server.jwtKey,
-                { expiresIn: '10m' },
+                { expiresIn: config.server.jwtKeyTimeout },
                 (err, token) => {
                     data.message = '登录成功'
                     logger.info(`JWT签名成功！${token}`);
@@ -63,26 +62,6 @@ router.all('/login', (req, res) => {
                 }
             );
         })
-        /*
-        if (username === 'xiaym' && password === '114514') {
-            jwt.sign(
-                { username },
-                config.server.jwtKey,
-                { expiresIn: '10m' },
-                (err, token) => {
-                    data.message = '登录成功'
-                    logger.debug(token);
-                    data.token = token;
-                    res.setHeader('Set-Cookie', `sb_web-token=${token}`);  //设置cookie
-                    res.end(JSON.stringify(data));
-                }
-            );
-        } else {
-            data.message = '账号或密码错误，请仔细检查';
-            res.end(JSON.stringify(data));
-        }
-        //logger.debug(JSON.stringify(req.body));
-        */
 
     } else {
         data.error = true;
