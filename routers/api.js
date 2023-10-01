@@ -2,9 +2,12 @@
 const fs = require('fs');
 const querystring = require('querystring');
 const router = require('express').Router();
+const jwt = require('jsonwebtoken');
 const SBLog = require('../SBLog.js');
+const YAML = require('yaml');
 
-const logger = new SBLog('info');
+const logger = new SBLog('debug');
+const config = YAML.parse(fs.readFileSync('config.yml', 'utf-8'));
 /*
 router.use((req, res, next) => {
     res.setHeader('Content-Type', 'application/json; charset=utf-8')
@@ -132,6 +135,47 @@ router.get('/api/file', (req, res) => {
             res.status(404).end(JSON.stringify(data));
         }
     }
+})
+
+router.get('/api/login-status', (req, res) => {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8')
+    // logger.error(`用户cookie：${req.cookies['sb_web-token']}`)
+    let data = {
+        error: false
+    };
+    jwt.verify(req.cookies['sb_web-token'], config.server.jwtKey, (err, payload) => {
+        if (err) {
+            logger.error(err);
+            data.error = true;
+            data.message = `验证失败，闻起来像${err}`
+            return;
+        }
+        data.message = `成功登录${JSON.stringify(payload)}`
+        logger.debug(`负载：${JSON.stringify(payload)}`);
+    })
+    // data.message = `你的token：${req.cookies['sb_web-token']}`
+    res.end(JSON.stringify(data));
+})
+
+router.get('/api/random-nsfw', (req, res) => {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8')
+    const arg  = req.url.split('?')[1]
+
+    let data = {
+        error: false
+    };
+    if (!arg) {
+        data.error = true;
+        data.message = 'arg is undefined!';
+        logger.error('客户端未提供参数！');
+        res.end(JSON.stringify(data))
+        return;
+    }
+
+    const type = arg.type;
+    data.type = type;
+    data.message = '获取涩图的接口';
+    res.end(JSON.stringify(data));
 })
 
 module.exports = router;

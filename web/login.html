@@ -51,9 +51,9 @@
             <h4>登录</h4>
             <form>
                 <span>Username</span>
-                <input id="username" type="text" name="user"><br>
+                <input id="username" type="text" name="user" value="xiaym">
                 <span>Password</span>
-                <input id="password" type="password" name="password">
+                <input id="password" type="password" name="password" value="114514">
             </form>
         </div>
         <button onclick="sendData(document.getElementById('username').value, document.getElementById('password').value)">提交</button>
@@ -71,7 +71,10 @@
 
                 xhr.send(JSON.stringify(data));
                 addMessage('请求已成功传达给后端');
-                console.log(data);
+                // console.log(data);
+                xhr.onreadystatechange = () => {
+                    addMessage(xhr.response);
+                }
             }
 
         </script>
