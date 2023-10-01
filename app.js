@@ -35,12 +35,12 @@ app.use((req, res, next) => {
     // res.setHeader('Content-Type', 'charset=utf-8')
     try{
         jwt.verify(req.cookies['sb_web-token'], config.server.jwtKey, (err, payload) => {
-            // logger.info(`\x1b[32m${req.ip}( ${payload.username} ) ${req.method} ${req.url}\x1b[39m`);
-            logger.info(`\x1b[32m( ${payload.username} ) ${req.method} ${req.url}\x1b[39m`);
+            logger.info(`\x1b[32m${config.option.showIP ? req.ip : ''}( ${payload.username} ) ${req.method} ${req.url}\x1b[39m`);
+            // logger.info(`\x1b[32m( ${payload.username} ) ${req.method} ${req.url}\x1b[39m`);
         })
     } catch (e) {
-        // logger.info(`${req.ip} ${req.method} ${req.url}`);
-        logger.info(`${req.method} ${req.url}`);
+        logger.info(`${config.option.showIP ? req.ip : ''} ${req.method} ${req.url}`);
+        // logger.info(`${req.method} ${req.url}`);
     }
 
     if (req.protocol !== 'https') {

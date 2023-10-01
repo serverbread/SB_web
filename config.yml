@@ -7,6 +7,8 @@ server:
   cert:
     private: '/etc/ssl/certs/dashabi.key'
     public: '/etc/ssl/certs/dashabi.pem'
+option:
+  showIP: true
 database:
   sqlite:
     path: 'data/users.db'
