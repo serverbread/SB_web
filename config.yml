@@ -1,0 +1,10 @@
+server:
+  httpPort: 80
+  httpsPort: 443
+  host: '0.0.0.0'
+  jwtKey: '34a611c6f7934545f1f0c13a61ee2eea'
+  cert:
+    private: '/etc/ssl/certs/dashabi.key'
+    public: '/etc/ssl/certs/dashabi.pem'
+database:
+  url: 'mongodb+srv://admin:Qjy102030@cluster0.2uoslox.mongodb.net/?retryWrites=true&w=majority'
