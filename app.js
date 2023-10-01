@@ -35,23 +35,16 @@ app.use((req, res, next) => {
     // res.setHeader('Content-Type', 'charset=utf-8')
     try{
         jwt.verify(req.cookies['sb_web-token'], config.server.jwtKey, (err, payload) => {
-            logger.info(`\x1b[32m${config.option.showIP ? req.ip : ''}( ${payload.username} ) ${req.method} ${req.url}\x1b[39m`);
+            logger.info(`\x1b[32m${config.option.showIP ? req.ip : ''}( ${payload.username} ) ${req.method} ${req.url} ${req.method === 'POST' ? JSON.stringify(req.body) : ''}\x1b[39m`);
             // logger.info(`\x1b[32m( ${payload.username} ) ${req.method} ${req.url}\x1b[39m`);
         })
     } catch (e) {
-        logger.info(`${config.option.showIP ? req.ip : ''} ${req.method} ${req.url}`);
+        logger.info(`${config.option.showIP ? req.ip : ''} ${req.method} ${req.url} ${req.method === 'POST' ? JSON.stringify(req.body) : ''}`);
         // logger.info(`${req.method} ${req.url}`);
     }
 
     if (req.protocol !== 'https') {
         return res.redirect('https://' + req.hostname + req.url);
-    }
-    if (req.method === 'POST') {
-        try {
-            logger.debug(JSON.stringify(req.body));
-        } catch (e) {
-            logger.error(e);
-        }
     }
     next();
 });
