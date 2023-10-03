@@ -2,7 +2,8 @@
 const fs = require('fs');
 
 class Logger {
-    constructor(level) {
+    constructor(level, logInFile) {
+        console.log(logInFile);
         switch (level) {
             case 'debug':
                 this.level = -1;
@@ -16,32 +17,39 @@ class Logger {
             case 'error':
                 this.level = 2;
                 break;
-        }
+        };
         this.opt = {
             flag: 'a'
-        }
-        this.logPath = 'file/latest.log'
+        };
+        this.logInFile = logInFile;
+	this.logPath = 'file/latest.log'
     }
     debug(str) {
         if (this.level > -1) {
             return;
         }
         console.debug(`\x1b[33m[${Date.parse(new Date())}][调试🪳] ${str}\x1b[39m`);
-        fs.writeFileSync(this.logPath, `[${Date.parse(new Date())}][调试🪳] ${str}\n`, this.opt);
+        if (this.logInFile) {
+            fs.writeFileSync(this.logPath, `[${Date.parse(new Date())}][调试🪳] ${str}\n`, this.opt);
+        }
     }
     info(str) {
         if (this.level > 0) {
             return;
         }
         console.log(`[${Date.parse(new Date())}][信息😆] ${str}`);
-        fs.writeFileSync(this.logPath, `[${Date.parse(new Date())}][信息😆] ${str}\n`, this.opt);
+        if (this.logInFile) {
+            fs.writeFileSync(this.logPath, `[${Date.parse(new Date())}][调试🪳] ${str}\n`, this.opt);
+        }
     }
     warn(str) {
         if (this.level > 1) {
             return;
         }
         console.log(`\x1b[33m[${Date.parse(new Date())}][警告⚠️] ${str}\x1b[39m`);
-	fs.writeFileSync(this.logPath, `[${Date.parse(new Date())}][警告⚠️] ${str}\n`, this.opt);
+        if (this.logInFile) {
+            fs.writeFileSync(this.logPath, `[${Date.parse(new Date())}][调试🪳] ${str}\n`, this.opt);
+        }
     }
     error(str) {
         /*
@@ -51,7 +59,9 @@ class Logger {
         // 所以我为啥要为一个不可能实现的条件而操心呢？
         */
         console.error(`\x1b[31m[${Date.parse(new Date())}][错误💥] ${str}\x1b[39m`);
-	fs.writeFileSync(this.logPath, `[${Date.parse(new Date())}][错误💥] ${str}\n`, this.opt);
+        if (this.logInFile) {
+            fs.writeFileSync(this.logPath, `[${Date.parse(new Date())}][调试🪳] ${str}\n`, this.opt);
+        }
     }
 }
 module.exports = Logger

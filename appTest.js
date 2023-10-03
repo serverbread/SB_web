@@ -1,3 +1,4 @@
+#!/bin/env node
 /*
 * Server bread个人网站
 * author:serverbread
@@ -9,7 +10,7 @@ const http = require('http');
 const SBLog = require('./SBLog.js');
 const { log } = require('console');
 
-const logger = new SBLog('info')
+const logger = new SBLog('info', false);
 
 /*const cert = {
     key: fs.readFileSync('/etc/ssl/certs/dashabi.key'),

@@ -1,0 +1,30 @@
+#msg-container {
+    position: absolute;
+    bottom: 10%;
+    height: auto;
+}
+.inf {
+    display: block;
+    background: linear-gradient(to right, rgb(131, 10, 201), rgba(0,0,0,0));
+    z-index: 8;
+    margin-top: 20px;
+    border-style: outset;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-color: cyan;
+    position: relative;
+    width: fit-content;
+    height: 30px;
+    backdrop-filter: blur(2px);
+    opacity: 1;
+}
+.inf span {
+    z-index: 9;
+    color: white;
+    float: left;
+    margin-left: 2px;
+    margin-bottom: 2px;
+    padding-left: 2px;
+    padding-right: 10px;
+}

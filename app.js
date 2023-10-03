@@ -13,7 +13,7 @@ const SBLog = require('./SBLog.js');
 const YAML = require('yaml');
 const jwt = require('jsonwebtoken');
 
-const logger = new SBLog('debug')
+const logger = new SBLog('debug', true)
 const config = YAML.parse(fs.readFileSync('config.yml', 'utf-8'));
 
 logger.debug(JSON.stringify(config));

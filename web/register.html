@@ -5,6 +5,130 @@
     </head>
     <body>
         <h1>我不会，长大后再学习</h1>
-        <p>目前只支持登录已在数据库中的用户，暂不提供注册服务</p>
+        <form>
+            用户名<input id="username" type="text">
+            邮箱<input id="email" type="text">
+            密码<input id="password" type="password">
+            <script>
+                function sendData(username, email, password) {
+                    
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('post', '/register', true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+    
+                    const data={
+                        username: `${username}`,
+                        email: `${email}`,
+                        password: `${password}`
+                    };
+    
+                    xhr.send(JSON.stringify(data));
+                    addMessage('请求已成功传达给后端');
+                    // console.log(data);
+                    xhr.onreadystatechange = () => {
+                        addMessage(JSON.parse(xhr.response).message);
+                    }
+                }
+            </script>
+        </form>
+        <button onclick="sendData(document.getElementById('username').value, document.getElementById('email').value, document.getElementById('password').value)">提交</button>
+        <div id="msg-container" onclick="addMessage('点你妈！？')">
+            <style>
+                #msg-container {
+                position: absolute;
+                bottom: 10%;
+                height: auto;
+            }
+            .inf {
+                display: block;
+                background: linear-gradient(to right, rgb(131, 10, 201), rgba(0,0,0,0));
+                z-index: 8;
+                margin-top: 20px;
+                border-style: outset;
+                border-top: 0px;
+                border-left: 0px;
+                border-right: 0px;
+                border-color: cyan;
+                position: relative;
+                width: fit-content;
+                height: 30px;
+                backdrop-filter: blur(2px);
+                opacity: 1;
+            }
+            .inf span {
+                z-index: 9;
+                color: white;
+                float: left;
+                margin-left: 2px;
+                margin-bottom: 2px;
+                padding-left: 2px;
+                padding-right: 10px;
+            }
+            </style>
+            <script>
+                let msgCount = 0;
+                async function addMessage(str) {
+                    const msgBar = document.querySelector('#msg-container');
+                    const inf = document.createElement('div');
+                    inf.className = 'inf'
+                    inf.id = `msg-${++msgCount}`
+                    /* inf.time = 3; */
+                    const infText = document.createElement('span');
+                    infText.innerText = str;
+                    inf.appendChild(infText);
+                    // inf.style.left = '-50%';
+                    msgBar.appendChild(inf);
+    
+                    // console.debug(`元素宽度${Math.round(document.querySelector(`#msg-${msgCount}`).getBoundingClientRect().width)}px`)
+                    inf.style.left = `-${Math.round(document.querySelector(`#msg-${msgCount}`).getBoundingClientRect().width)}px`
+                    let p = Number(inf.style.left.replace('px', ''));
+                    const animate = setInterval(() => {
+                        if (p <= 0) {
+                            // console.debug(`${p}`)
+                            inf.style.left = `${p += 5}px`
+                        } else {
+                            inf.time = 3;
+                            clearInterval(animate)
+                        }
+                    }, 0.01)
+                }
+                setInterval(() => {
+                    try {
+                        const elem = document.getElementById('msg-container');
+                        // 遍历所有子元素
+                        for (let i = 0; i < elem.children.length; i++) {
+                            if (document.getElementById('msg-container').children[i]) {
+                                //console.log(`元素存在:${i}`);
+                                const children = document.getElementById('msg-container').children[i];
+                                // 淡出动画
+                                const animate1 = setInterval(() => {
+                                    //console.log(`计时器：${children.time}`)
+                                    if (children.time-- <= 0) {
+                                        //console.log('计时完成');
+                                        let i = 0
+                                        const animate2 = setInterval(() => {
+                                            if (i > -100) {
+                                                children.style.bottom = `${i -= 10}%`;
+                                            } else {
+                                                children.remove()
+                                                clearInterval(animate1);
+                                                clearInterval(animate2);
+                                            }
+                                        }, 1)
+                                        //children.style.opacity -= 0.1;
+                                    }
+                                }, 1000);
+                                }/*  else {
+                                    console.log(`元素不存在:${i}`);
+                                } */
+                            }
+    
+                        
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }, 1000)
+            </script>
+        </div>
     </body>
 </html>

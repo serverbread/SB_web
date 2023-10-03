@@ -7,10 +7,21 @@ server:
   cert:
     private: '/etc/ssl/certs/dashabi.key'
     public: '/etc/ssl/certs/dashabi.pem'
+  mail:
+    smtpUser:
+      user: 'serverbread'
+      pass: 'RZTJLNZSAPOQKGWQ'
+    smtpServer:
+      host: 'smtp.163.com'
+      port: 465
+      secure: true
+
 option:
   showIP: true
+
 database:
   sqlite:
-    path: 'data/users.db'
+    userDatabase: 'data/users.db'
+    registerDatabase: 'data/register.db'
   redis:
     url: ''

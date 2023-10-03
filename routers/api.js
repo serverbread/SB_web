@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const SBLog = require('../SBLog.js');
 const YAML = require('yaml');
 
-const logger = new SBLog('info');
+const logger = new SBLog('info' ,true);
 const config = YAML.parse(fs.readFileSync('config.yml', 'utf-8'));
 /*
 router.use((req, res, next) => {
