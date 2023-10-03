@@ -129,10 +129,10 @@ router.all('/register', (req, res) => {
                             pass: pass,  // 邮箱授权密码
                         },
                     }).sendMail({
-                        from: '"😡傻逼网站😡" <serverbread@163.com>', // 发送方邮箱的账号
+                        from: '"😡SB网站的注册确认挑战书😡" <serverbread@163.com>', // 发送方邮箱的账号
                         to: email, // 邮箱接受者的账号
                         subject: "wElCoMe", // Subject line
-                        html: `<a href="https://dashabi.stehp.cn/captcha/${captcha}">点击此处验证你的邮箱</a>`, // html 内容, 如果设置了html内容, 将忽略text内容
+                        html: `<button><a href="https://dashabi.stehp.cn/captcha/${captcha}">点击此处验证你的邮箱</a></button>`, // html 内容, 如果设置了html内容, 将忽略text内容
                     });
                 })
                 data.message = '验证码已发送，请查收邮箱！';

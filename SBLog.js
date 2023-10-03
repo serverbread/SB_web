@@ -3,7 +3,7 @@ const fs = require('fs');
 
 class Logger {
     constructor(level, logInFile) {
-        console.log(logInFile);
+        //console.log(logInFile);
         switch (level) {
             case 'debug':
                 this.level = -1;

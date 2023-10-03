@@ -2,17 +2,17 @@ server:
   httpPort: 80
   httpsPort: 443
   host: '0.0.0.0'
-  jwtKey: 'ca0f180dec4c5243012520f01e4ae93f95d41cfd'
+  jwtKey: ''
   jwtKeyTimeout: '240h'
   cert:
     private: '/etc/ssl/certs/dashabi.key'
     public: '/etc/ssl/certs/dashabi.pem'
   mail:
     smtpUser:
-      user: 'serverbread'
-      pass: 'RZTJLNZSAPOQKGWQ'
+      user: ''
+      pass: ''
     smtpServer:
-      host: 'smtp.163.com'
+      host: ''
       port: 465
       secure: true
 
