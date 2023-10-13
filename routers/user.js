@@ -10,7 +10,7 @@ const sqlite3 = require('sqlite3');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
-const config = YAML.parse(fs.readFileSync('config.yml', 'utf-8')); // 配置文件
+const config = require('../config.js'); // 配置文件
 const logger = new SBLog('debug');
 const userDb = new sqlite3.Database(config.database.sqlite.userDatabase, err => logger.error(err));
 const regDb = new sqlite3.Database(config.database.sqlite.registerDatabase, err => logger.error(err));

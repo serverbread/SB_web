@@ -7,7 +7,7 @@ const SBLog = require('../SBLog.js');
 const YAML = require('yaml');
 
 const logger = new SBLog('info' ,true);
-const config = YAML.parse(fs.readFileSync('config.yml', 'utf-8'));
+const config = require('../config.js');
 /*
 router.use((req, res, next) => {
     res.setHeader('Content-Type', 'application/json; charset=utf-8')

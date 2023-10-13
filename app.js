@@ -14,7 +14,7 @@ const YAML = require('yaml');
 const jwt = require('jsonwebtoken');
 
 const logger = new SBLog('debug', true)
-const config = YAML.parse(fs.readFileSync('config.yml', 'utf-8'));
+const config = require('./config.js');
 
 logger.debug(JSON.stringify(config));
 
@@ -56,3 +56,11 @@ app.use(require('./routers/resource.js'));
 
 httpServer.listen(config.server.httpPort, config.server.host, (logger.info('http服务器已启动')));
 httpsServer.listen(config.server.httpsPort, config.server.host, (logger.info('https服务器已启动')))
+
+process.on('SIGTERM',()=>{
+    // close server
+    httpServer.close(()=>{
+        console.error('收到SIGTERM，正在准备关服跑路！');
+    });
+})
+//httpsServer.listen(8443, '0.0.0.0', (logger.warn('服务器已启动')))
