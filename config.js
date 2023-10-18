@@ -9,7 +9,7 @@ const defaultConfig = {
         jwtKey: '',
         jwtKeyTimeout: '240h',
         cert: { private: '', public: '' },
-        mail: { smtpUser: {'user': ''}, smtpServer: [Object] }
+        mail: { smtpUser: {user: 'shabi', pass: '000'}, smtpServer: {host: '127.0.0.1', port: 25, secure: false} }
     },
     option: { showIP: true },
     database: {

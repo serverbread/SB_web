@@ -8,7 +8,7 @@ const logger = new SBLog('error', true);
 
 router.get('/file*', (req, res) => {
     try{
-        const path = req.path.split('?')[0].slice(1);
+        const path = decodeURIComponent(req.path.split('?')[0].slice(1));
         //logger.debug(`读取文件${path}`)
         // 判定路径是否为文件
         if (fs.lstatSync(path).isFile()) {
