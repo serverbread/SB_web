@@ -4,7 +4,7 @@ const router = require('express').Router();
 const fs = require('fs');
 const SBLog = require('../SBLog.js')
 
-const logger = new SBLog('error', true)
+const logger = new SBLog('error', true, __filename)
 /*
 router.use((req, res, next) => {
     

@@ -11,9 +11,9 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
 const config = require('../config.js'); // 配置文件
-const logger = new SBLog('debug');
-const userDb = new sqlite3.Database(config.database.sqlite.userDatabase, err => logger.error(err));
-const regDb = new sqlite3.Database(config.database.sqlite.registerDatabase, err => logger.error(err));
+const logger = new SBLog('debug', true, __filename);
+const userDb = new sqlite3.Database(config.database.sqlite.userDatabase/*, err => logger.error(err)*/);
+const regDb = new sqlite3.Database(config.database.sqlite.registerDatabase/*, err => logger.error(err)*/);
 // client.on('error', err => logger.error(err))
 
 router.all('/login', (req, res) => {
@@ -147,6 +147,11 @@ router.all('/register', (req, res) => {
         res.status(400).end(JSON.stringify(data));
     }
 });
+
+router.get('/logout', (req, res) => {
+    res.setHeader('Set-Cookie', `sb_web-token=${undefined}`);  //设置cookie
+    res.end('logout succesfully!');
+})
 
 router.get('/captcha/*', (req, res) => {
     const captcha = req.path.split('/captcha/')[1];

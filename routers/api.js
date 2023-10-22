@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const SBLog = require('../SBLog.js');
 const YAML = require('yaml');
 
-const logger = new SBLog('info' ,true);
+const logger = new SBLog('info' ,true, __filename);
 const config = require('../config.js');
 /*
 router.use((req, res, next) => {
