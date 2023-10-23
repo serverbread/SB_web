@@ -12,8 +12,8 @@ const crypto = require('crypto');
 
 const config = require('../config.js'); // 配置文件
 const logger = new SBLog('debug', true, __filename);
-const userDb = new sqlite3.Database(config.database.sqlite.userDatabase/*, err => logger.error(err)*/);
-const regDb = new sqlite3.Database(config.database.sqlite.registerDatabase/*, err => logger.error(err)*/);
+const db = new sqlite3.Database(config.database.sqlite.userDatabase/*, err => logger.error(err)*/);
+//const regDb = new sqlite3.Database(config.database.sqlite.registerDatabase/*, err => logger.error(err)*/);
 // client.on('error', err => logger.error(err))
 
 router.all('/login', (req, res) => {
@@ -31,7 +31,7 @@ router.all('/login', (req, res) => {
         const { username, password } = req.body;  // 获取post请求的数据
 
         // 使用数据库获取数据
-        userDb.get(`SELECT * FROM USERDATA WHERE id == '${username}'`, (err, row) => {
+        db.get(`SELECT * FROM users WHERE id == '${username}'`, (err, row) => {
             // 检测用户名是否正确
             if (!row) {
                 logger.error('查无此人');
@@ -42,7 +42,7 @@ router.all('/login', (req, res) => {
             }
             logger.info(`成功从数据库中找到了${username}！`);
             // 检测密码是否正确
-            if (row.password != crypto.createHash('sha512').update(password).digest('base64')) {
+            if (row.hashedPassword != crypto.createHash('sha512').update(password).digest('base64')) {
                 data.error = true;
                 data.message = '登录失败！请检查用户名与密码是否正确！'
                 res.end(JSON.stringify(data));
@@ -50,6 +50,11 @@ router.all('/login', (req, res) => {
                 return;
             }
             logger.info(`${username}的密码正确！`);
+            // 验证用户是否已验证邮箱
+            if (!row.Verified) {
+                data.error = true;
+                data.message = '登录失败！你还未验证邮箱！'
+            }
             // 使用jwt签名
             jwt.sign(
                 { username },
@@ -96,7 +101,7 @@ router.all('/register', (req, res) => {
             return;
         }
 
-            regDb.all(`SELECT * FROM register`, (err, row) => {
+            db.all(`SELECT * FROM users`, (err, row) => {
                 if (err) logger.error(err);
                 if (isCancelled) return;
                 // 检测用户名、邮箱事后已被占用
@@ -113,10 +118,10 @@ router.all('/register', (req, res) => {
 
                 // 将数据写入数据库
                 const captcha = crypto.randomUUID();
-                const sql = `INSERT INTO register ( UUID, email, id, password )
+                const sql = `INSERT INTO users ( id, UUID, email, hashedPassword, Verified )
                                                 VALUES
-                                                ( '${captcha}', '${email}', '${username}', '${crypto.createHash('sha512').update(password).digest('base64')}' );`
-                regDb.run(sql, err => {
+                                                ( '${username}', '${captcha}', '${email}', '${crypto.createHash('sha512').update(password).digest('base64')}', 'false' );`
+                db.run(sql, err => {
                     if (err) logger.error(err);
     
                     // 发送验证码邮件
@@ -158,17 +163,15 @@ router.get('/captcha/*', (req, res) => {
     logger.debug(captcha);
     res.setHeader('Content-Type', 'text/plain; charset=utf-8')
 
-    regDb.get(`SELECT * FROM register WHERE UUID == '${captcha}'`, (err, row) => {
+    db.get(`SELECT * FROM users WHERE UUID == '${captcha}'`, (err, row) => {
         if (err) logger.error(err);
         if (!row) {
             logger.error('错误的，未查询到信息');
             res.status(400).write('傻逼');
             return;
         }
-        const sql = `INSERT INTO userData ( id, email, password )
-                                            VALUES
-                                            ( '${row.id}', '${row.email}', '${row.password}' );`;
-        userDb.run(sql, err => {
+        const sql = `UPDATE users SET Verified = 'true' where UUID == '${captcha}';`
+        db.run(sql, err => {
             if (err) logger.error(err);
             res.end('验证成功！请到/login登录账号');
         })

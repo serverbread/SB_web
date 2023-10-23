@@ -15,7 +15,7 @@ const defaultConfig = {
     database: {
         sqlite: {
             userDatabase: 'data/users.db',
-            registerDatabase: 'data/register.db'
+            //registerDatabase: 'data/register.db'
         }
     }
 };
