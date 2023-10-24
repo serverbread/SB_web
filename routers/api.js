@@ -5,9 +5,11 @@ const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const SBLog = require('../SBLog.js');
 const YAML = require('yaml');
+const sqlite3 = require('sqlite3');
 
 const logger = new SBLog('info' ,true, __filename);
 const config = require('../config.js');
+const db = new sqlite3.Database(config.database.sqlite.userDatabase/*, err => logger.error(err)*/);
 /*
 router.use((req, res, next) => {
     res.setHeader('Content-Type', 'application/json; charset=utf-8')

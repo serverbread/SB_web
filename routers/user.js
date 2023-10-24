@@ -100,6 +100,12 @@ router.all('/register', (req, res) => {
             res.end(JSON.stringify(data));
             return;
         }
+	if (password.length >= 50) {
+            data.error = true;
+            data.message = '输这么长的密码你要死啊？';
+	    res.end(JSON.stringify(data));
+	    return;
+	}
 
             db.all(`SELECT * FROM users`, (err, row) => {
                 if (err) logger.error(err);

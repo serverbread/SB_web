@@ -4,9 +4,11 @@ const router = require('express').Router();
 const fs = require('fs');
 const SBLog = require('../SBLog.js');
 const path = require('path');
+const sqlite3 = require('sqlite3');
 
 const logger = new SBLog('debug', true, __filename);
 const config = require('../config.js');
+const db = new sqlite3.Database(config.database.sqlite.userDatabase/*, err => logger.error(err)*/);
 
 path.parent = (currentPath) => {
     // 返回输入路径的父目录的函数
