@@ -29,7 +29,8 @@ router.get('/file*', (req, res) => {
                 if (!req.isLogin) {
                     // 403
                     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-                    res.status(403).end(`该${fs.lstatSync(reqPath).isFile() ? '文件' : '目录'}被锁定了，请登录后查看`);
+		    const desc = fs.readFileSync(`${tmpPath}/.lock`).toString();
+                    res.status(403).end(`该${fs.lstatSync(reqPath).isFile() ? '文件' : '目录'}被锁定了，请登录后查看，原因：${desc}`);
                     logger.info('用户尝试访问一个锁定的文件夹，但是他没有登录');
                     return;
                 };
