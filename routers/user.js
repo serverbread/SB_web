@@ -3,7 +3,7 @@
 const router = require('express').Router();
 //const bodyParser = require('body-parser');
 const fs = require('fs');
-const SBLog = require('../SBLog.js');
+const log4js = require('log4js');
 const jwt = require('jsonwebtoken');
 const YAML = require('yaml');
 const sqlite3 = require('sqlite3');
@@ -11,7 +11,8 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
 const config = require('../config.js'); // 配置文件
-const logger = new SBLog('debug', true, __filename);
+const logger = log4js.getLogger();
+logger.level = 'debug';
 const db = new sqlite3.Database(config.database.sqlite.userDatabase/*, err => logger.error(err)*/);
 //const regDb = new sqlite3.Database(config.database.sqlite.registerDatabase/*, err => logger.error(err)*/);
 // client.on('error', err => logger.error(err))

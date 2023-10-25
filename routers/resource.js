@@ -2,11 +2,12 @@
 
 const router = require('express').Router();
 const fs = require('fs');
-const SBLog = require('../SBLog.js');
+const log4js = require('log4js');
 const path = require('path');
 const sqlite3 = require('sqlite3');
 
-const logger = new SBLog('debug', true, __filename);
+const logger = log4js.getLogger();
+logger.level = 'debug';
 const config = require('../config.js');
 const db = new sqlite3.Database(config.database.sqlite.userDatabase/*, err => logger.error(err)*/);
 

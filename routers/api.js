@@ -3,11 +3,13 @@ const fs = require('fs');
 const querystring = require('querystring');
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
-const SBLog = require('../SBLog.js');
+//const SBLog = require('../SBLog.js');
+const log4js = require('log4js');
 const YAML = require('yaml');
 const sqlite3 = require('sqlite3');
 
-const logger = new SBLog('info' ,true, __filename);
+const logger = log4js.getLogger();
+logger.level = 'debug';
 const config = require('../config.js');
 const db = new sqlite3.Database(config.database.sqlite.userDatabase/*, err => logger.error(err)*/);
 /*

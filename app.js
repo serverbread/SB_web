@@ -7,13 +7,16 @@
 const express = require('express');
 const http = require('http');
 const https = require('https');
+const http2 = require('http2');
 const fs = require('fs');
-const SBLog = require('./SBLog.js');
+//const SBLog = require('./SBLog.js');
+const log4js = require('log4js');
 //const exp = require('constants');
 const YAML = require('yaml');
 const jwt = require('jsonwebtoken');
 
-const logger = new SBLog('debug', true)
+const logger = log4js.getLogger();
+logger.level = 'debug';
 const config = require('./config.js');
 
 logger.debug(JSON.stringify(config));
@@ -26,6 +29,7 @@ const cert = {
 const app = express();
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer(cert, app);
+//const httpsServer = https.createSecureServer(cert, app);
 
 app.use(require('body-parser').urlencoded({ extended: false }))
 app.use(express.json())
@@ -37,9 +41,18 @@ app.use((req, res, next) => {
         jwt.verify(req.cookies['sb_web-token'], config.server.jwtKey, (err, payload) => {
             logger.info(`\x1b[32m${config.option.showIP ? req.ip : ''}( ${payload.username} ) ${req.method} ${req.url} ${req.method === 'POST' ? JSON.stringify(req.body) : ''}\x1b[39m`);
             // logger.info(`\x1b[32m( ${payload.username} ) ${req.method} ${req.url}\x1b[39m`);
+            if (payload) {
+                req.isLogin = true;
+            } else {
+                req.isLogin = false;
+            }
+	        if (err) {
+                logger.error(e);
+	        }
         })
     } catch (e) {
         logger.info(`${config.option.showIP ? req.ip : ''} ${req.method} ${req.url} ${req.method === 'POST' ? JSON.stringify(req.body) : ''}`);
+        req.isLogin = false;
         // logger.info(`${req.method} ${req.url}`);
     }
 
