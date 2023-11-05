@@ -31,3 +31,7 @@ file/img/login-background.png
 # 通常来说这个文件不会被修改，因为在本地测试时需要更改他的端口、https等方面内容
 #app.js
 config.yml
+#忽略自定义文件
+file/*
+data/*
+passages/*

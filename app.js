@@ -11,6 +11,7 @@ const http2 = require('http2');
 const fs = require('fs');
 //const SBLog = require('./SBLog.js');
 const log4js = require('log4js');
+const geoip = require('geoip-lite');
 //const exp = require('constants');
 const YAML = require('yaml');
 const jwt = require('jsonwebtoken');
@@ -39,7 +40,7 @@ app.use((req, res, next) => {
     // res.setHeader('Content-Type', 'charset=utf-8')
     try{
         jwt.verify(req.cookies['sb_web-token'], config.server.jwtKey, (err, payload) => {
-            logger.info(`\x1b[32m${config.option.showIP ? req.ip : ''}( ${payload.username} ) ${req.method} ${req.url} ${req.method === 'POST' ? JSON.stringify(req.body) : ''}\x1b[39m`);
+            logger.info(`\x1b[32m${config.option.showIP ? req.ip : ''}[${config.option.showIP ? geoip.lookup(req.ip).country : ''}/${config.option.showIP ? geoip.lookup(req.ip).region : ''}]( ${payload.username} ) ${req.method} ${req.url} ${req.method === 'POST' ? JSON.stringify(req.body) : ''}\x1b[39m`);
             // logger.info(`\x1b[32m( ${payload.username} ) ${req.method} ${req.url}\x1b[39m`);
             if (payload) {
                 req.isLogin = true;
@@ -51,7 +52,7 @@ app.use((req, res, next) => {
 	        }
         })
     } catch (e) {
-        logger.info(`${config.option.showIP ? req.ip : ''} ${req.method} ${req.url} ${req.method === 'POST' ? JSON.stringify(req.body) : ''}`);
+        logger.info(`${config.option.showIP ? req.ip : ''}[${config.option.showIP ? geoip.lookup(req.ip).country : ''}/${config.option.showIP ? geoip.lookup(req.ip).region : ''}] ${req.method} ${req.url} ${req.method === 'POST' ? JSON.stringify(req.body) : ''}`);
         req.isLogin = false;
         // logger.info(`${req.method} ${req.url}`);
     }

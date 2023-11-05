@@ -12,6 +12,8 @@ const logger = log4js.getLogger();
 logger.level = 'debug';
 const config = require('../config.js');
 const db = new sqlite3.Database(config.database.sqlite.userDatabase/*, err => logger.error(err)*/);
+
+const setuDb = new sqlite3.Database('data/nsfwPic.db');
 /*
 router.use((req, res, next) => {
     res.setHeader('Content-Type', 'application/json; charset=utf-8')
@@ -19,17 +21,13 @@ router.use((req, res, next) => {
 });
 */
 router.get('/api', (req, res) => {
-    res.setHeader('Content-Type', 'application/json; charset=utf-8')
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     let data = {
         error: false
     };  // 初始化返回数据
-    data.message = '如何使用api接口？\
-    注意，每一个向/api请求的url都必须含有一个method参数\
-    他可以为:\
-    coffee,get\
-    ';
+    data.message = `查看/p/API`;
     res.end(JSON.stringify(data));
-})
+});
 /*
 router.all('/api*', (req, res) => {
     res.setHeader('Content-Type', 'application/json; charset=utf-8'); // 设置请求头，确认要返回的是JSON
@@ -37,18 +35,18 @@ router.all('/api*', (req, res) => {
 */
 
 router.get('/api/passage', (req, res) => {
-    res.setHeader('Content-Type', 'application/json; charset=utf-8')
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
-    const arg  = req.url.split('?')[1]
+    const arg  = req.url.split('?')[1];
 
     let data = {
         error: false
-    }
+    };
     if (!arg) {
         data.error = true;
         data.message = 'arg is undefined!';
         logger.error('客户端未提供参数！');
-        res.end(JSON.stringify(data))
+        res.end(JSON.stringify(data));
     } else {
         // 所有逻辑在这开始
         switch (querystring.parse(arg).method) {
@@ -73,7 +71,7 @@ router.get('/api/passage', (req, res) => {
                         }).pop();
                         res.end(JSON.stringify(data));
                         return;
-                }
+                };
                 data.message = 'no detail, please look at /';
                 res.end(JSON.stringify(data));
                 return;
@@ -88,16 +86,16 @@ router.get('/api/passage', (req, res) => {
                     return;
                 };
                 res.end(JSON.stringify(data));
-                return
+                return;
             };
         data.error = true;
         data.messgae = 'no method, please look at /';
         res.end(JSON.stringify(data));
-    }
-})
+    };
+});
 
 router.get('/api/file', (req, res) => {
-    res.setHeader('Content-Type', 'application/json; charset=utf-8')
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     /*
     客户端需要提供一个参数：path
     */
@@ -120,7 +118,7 @@ router.get('/api/file', (req, res) => {
         return;
     } else {
         let fileList = [];
-        const path = querystring.parse(arg).path
+        const path = querystring.parse(arg).path;
         try {
             fs.readdirSync(`${path}/`).forEach(file => {
                 // logger.debug(`file:${file}`)
@@ -137,12 +135,12 @@ router.get('/api/file', (req, res) => {
             data.error = true;
             data.message = 'I can\'t found the resource, your problem.'
             res.status(404).end(JSON.stringify(data));
-        }
-    }
-})
+        };
+    };
+});
 
 router.get('/api/login-status', (req, res) => {
-    res.setHeader('Content-Type', 'application/json; charset=utf-8')
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     // logger.error(`用户cookie：${req.cookies['sb_web-token']}`)
     let data = {
         error: false
@@ -153,18 +151,19 @@ router.get('/api/login-status', (req, res) => {
             data.error = true;
             data.message = `验证失败，闻起来像${err}`
             return;
-        }
+        };
         data.message = '成功登录'
         logger.debug(`负载：${JSON.stringify(payload)}`);
-    })
+    });
     // data.message = `你的token：${req.cookies['sb_web-token']}`
     res.end(JSON.stringify(data));
-})
+});
 
-router.get('/api/random-nsfw', (req, res) => {
+router.get('/api/setu', (req, res) => {
     res.setHeader('Content-Type', 'application/json; charset=utf-8')
-    const arg  = req.url.split('?')[1]
-
+    const arg = req.url.split('?')[1];
+    logger.debug(querystring.parse(arg));
+    db.all('SELECT * FROM nsfwPic WHERE ')
     let data = {
         error: false
     };
@@ -172,14 +171,15 @@ router.get('/api/random-nsfw', (req, res) => {
         data.error = true;
         data.message = 'arg is undefined!';
         logger.error('客户端未提供参数！');
-        res.end(JSON.stringify(data))
+        res.end(JSON.stringify(data));
         return;
-    }
+    };
 
-    const type = arg.type;
-    data.type = type;
-    data.message = '获取涩图的接口';
     res.end(JSON.stringify(data));
-})
+});
+
+router.get('/api/coffee', (req, res) => {
+    res.status(418).end('418');
+});
 
 module.exports = router;
